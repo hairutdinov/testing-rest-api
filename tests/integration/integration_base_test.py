@@ -11,7 +11,7 @@ from app import app
 from db import db
 
 
-class BaseTest(TestCase):
+class IntegrationBaseTest(TestCase):
     def setUp(self) -> None:
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'
         with app.app_context():
