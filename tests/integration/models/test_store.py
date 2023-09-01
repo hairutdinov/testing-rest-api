@@ -1,9 +1,9 @@
-from tests.integration.integration_base_test import IntegrationBaseTest
+from tests.base_test import BaseTest
 from models.item import ItemModel
 from models.store import StoreModel
 
 
-class StoreTest(IntegrationBaseTest):
+class StoreTest(BaseTest):
     def test_create_store(self):
         store = StoreModel('test')
         self.assertEqual(store.items.all(), [],

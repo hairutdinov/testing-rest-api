@@ -1,9 +1,8 @@
-from tests.integration.integration_base_test import IntegrationBaseTest
-from models.item import ItemModel
+from tests.base_test import BaseTest
 from models.user import UserModel
 
 
-class UserTest(IntegrationBaseTest):
+class UserTest(BaseTest):
     def test_crud(self):
         with self.app_context():
             user = UserModel('bulat', 'qwerty')
