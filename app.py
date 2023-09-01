@@ -15,6 +15,7 @@ app.config['DEBUG'] = True
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.config['PROPAGATE_EXCEPTIONS'] = True
 app.secret_key = 'bulat1234'
 api = Api(app)
 
@@ -26,6 +27,7 @@ api.add_resource(ItemList, '/items')
 api.add_resource(StoreList, '/stores')
 
 api.add_resource(UserRegister, '/register')
+
 
 @app.errorhandler(JWTError)
 def auth_error_handler(err):
@@ -40,8 +42,7 @@ if __name__ == '__main__':
     db.init_app(app)
 
     if app.config['DEBUG']:
-        @app.before_first_request
-        def create_tables():
+        with app.app_context():
             db.create_all()
 
     app.run(port=5000)
