@@ -7,13 +7,27 @@ class UserTest(BaseTest):
     def test_register_user(self):
         with self.app() as client:
             with self.app_context():
-                request = client.post('/register', json={'username': 'ivan', 'password': '1234'})
-                self.assertEqual(request.status_code, 201)
+                response = client.post('/register', json={'username': 'ivan', 'password': '1234'})
+                self.assertEqual(response.status_code, 201)
                 self.assertIsNotNone(UserModel.find_by_username('ivan'))
-                self.assertDictEqual(json.loads(request.data), {'message': 'User created successfully'})
+                self.assertDictEqual(json.loads(response.data), {'message': 'User created successfully'})
 
     def test_register_and_login(self):
-        pass
+        with self.app() as client:
+            with self.app_context():
+                client.post('/register', json={'username': 'ivan', 'password': '1234'})
+                auth_response = client.post('/auth',
+                                           data=json.dumps({'username': 'ivan', 'password': '1234'}),
+                                           headers={'Content-Type': 'application/json'}
+                                           )
+                self.assertIn('access_token', json.loads(auth_response.data).keys())
 
     def test_register_duplicate_user(self):
-        pass
+        with self.app() as client:
+            with self.app_context():
+                client.post('/register', json={'username': 'ivan', 'password': '1234'})
+                response = client.post('/register', json={'username': 'ivan', 'password': '1234'})
+
+                self.assertEqual(response.status_code, 400)
+                self.assertDictEqual({'message': 'A user with that username already exists'},
+                                     json.loads(response.data))
